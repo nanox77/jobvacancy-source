@@ -11,3 +11,4 @@
 
 ## Travis Link:
 
+[![Build Status](https://travis-ci.org/MarianoCastellano/jobvacancy-source.svg)](https://travis-ci.org/MarianoCastellano/jobvacancy-source)
