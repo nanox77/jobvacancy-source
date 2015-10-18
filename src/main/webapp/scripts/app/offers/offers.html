@@ -1,0 +1,94 @@
+<div>
+    <h2>Current Job Offers</h2>
+    <jh-alert></jh-alert>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <!--
+                <button class="btn btn-primary" ui-sref="jobOffer.new">
+                    <span class="glyphicon glyphicon-flash"></span> <span>Create a new JobOffer</span>
+                </button>
+                -->
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="jobOffer in jobOffers">
+                <td>{{jobOffer.title}}</td>
+                <td>{{jobOffer.location}}</td>
+                <td>{{jobOffer.description}}</td>
+                <td>
+                    <!--
+                    <button type="submit"
+                            ui-sref="jobOffer.detail({id:jobOffer.id})"
+                            class="btn btn-info btn-sm">
+                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
+                    </button>
+                    -->
+                    <button type="submit"
+                            ui-sref="application({id:jobOffer.id})"
+                            class="btn btn-primary btn-sm">
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Apply</span>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pager">
+                <li ng-show="links['first'] >= 0" ng-click="loadPage(links['first'])"><a href="#">&lt;&lt;</a></li>
+                <li ng-show="page > 0" ng-click="loadPage(links['prev'] || 0)"><a href="#">&lt;</a></li>
+                <li ng-show="links['next']" ng-click="loadPage(links['next'])"><a href="#">&gt;</a></li>
+                <li ng-show="links['last'] > 0" ng-click="loadPage(links['last'])"><a href="#">&gt;&gt;</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!--
+<h1>Current Job Offers</h1>
+
+<div class="search-box">
+    <form method="POST" action="search" class="form-search">
+        <input type="text" name="q" />
+        <input type="submit" value="search" id="search-button" class="btn btn-primary"/>
+    </form>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Title</th>
+        <th>Location</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+
+    <tr>
+        <td>
+                programador
+        </td>
+        <td>
+            ubicacion
+        </td>
+        <td>
+           descripcion
+        </td>
+        <td>
+           apply
+        </td>
+    </tr>
+
+
+</table>
+-->
