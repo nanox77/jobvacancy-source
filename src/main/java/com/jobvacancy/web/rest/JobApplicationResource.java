@@ -2,10 +2,7 @@ package com.jobvacancy.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.jobvacancy.domain.JobOffer;
-import com.jobvacancy.domain.User;
 import com.jobvacancy.repository.JobOfferRepository;
-import com.jobvacancy.repository.UserRepository;
-import com.jobvacancy.security.SecurityUtils;
 import com.jobvacancy.service.MailService;
 import com.jobvacancy.web.rest.dto.JobApplicationDTO;
 import com.jobvacancy.web.rest.util.HeaderUtil;
@@ -20,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -43,8 +38,10 @@ public class JobApplicationResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JobOffer> createJobApplication(@Valid @RequestBody JobApplicationDTO jobApplication) throws URISyntaxException {
+    public ResponseEntity<JobOffer> createJobApplication(@Valid @RequestBody JobApplicationDTO jobApplication)
+        throws URISyntaxException {
         log.debug("REST request to save JobApplication : {}", jobApplication);
+        jobApplication.validate();
         JobOffer jobOffer = jobOfferRepository.findOne(jobApplication.getOfferId());
         this.mailService.sendApplication(jobApplication.getEmail(), jobOffer);
 
