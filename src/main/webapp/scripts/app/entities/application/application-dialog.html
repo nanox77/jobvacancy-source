@@ -57,11 +57,12 @@
 
         <div class="form-group">
             <label for="field_file">Your CV</label>
-            <input type="file" file-model="myFile" name="file" id="field_file" required>
+            <input type="file" file-model="myFile" name="cv" id="field_file"
+                   ng-model="jobApplication.cv" valid-file required>
 
-            <div ng-show="editForm.file.$invalid && editForm.file.$dirty">
+            <div ng-show="editForm.cv.$invalid">
                 <p class="help-block"
-                   ng-show="editForm.file.$error.required">
+                   ng-show="editForm.cv.$error.required">
                     This field is required.
                 </p>
             </div>
