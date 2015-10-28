@@ -1,4 +1,4 @@
-<form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
+<form name="editForm" role="form" novalidate ng-submit="save()" show-validation enctype="multipart/form-data">
 
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
@@ -51,6 +51,18 @@
                 <p class="help-block"
                    ng-show="editForm.location.$error.pattern">
                     E-mail not allowed.
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="field_file">Your CV</label>
+            <input type="file" file-model="myFile" name="file" id="field_file" required>
+
+            <div ng-show="editForm.file.$invalid && editForm.file.$dirty">
+                <p class="help-block"
+                   ng-show="editForm.file.$error.required">
+                    This field is required.
                 </p>
             </div>
         </div>
