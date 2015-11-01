@@ -1,5 +1,4 @@
-
-<form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
+<form name="editForm" role="form" novalidate ng-submit="save()" show-validation enctype="multipart/form-data">
 
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
@@ -8,20 +7,21 @@
     </div>
     <div class="modal-body">
         <jh-alert-error></jh-alert-error>
-<!--
-        <div class="form-group">
-            <input type="hidden" class="form-control" id="id" name="id"
-                    ng-model="jobOffer.id" readonly>
-        </div>
--->
+        <!--
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="id" name="id"
+                            ng-model="jobOffer.id" readonly>
+                </div>
+        -->
         <div class="form-group">
             <label for="field_fullname">Your Full Name</label>
             <input type="text" class="form-control" name="fullname" id="field_fullname"
-                    ng-model="jobApplication.fullname"
-                    required>
+                   ng-model="jobApplication.fullname"
+                   required>
+
             <div ng-show="editForm.fullname.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.fullname.$error.required">
+                   ng-show="editForm.fullname.$error.required">
                     This field is required.
                 </p>
             </div>
@@ -29,12 +29,41 @@
         <div class="form-group">
             <label for="field_email">Your Email</label>
             <input type="text" class="form-control" name="location" id="field_email"
-                    ng-model="jobApplication.email"
-                    required>
-            <div ng-show="editForm.email.$invalid">
+                   ng-model="jobApplication.email" ng-pattern="/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/"
+                   ng-minlength=5 ng-maxlength=100 required>
+
+            <div ng-show="editForm.location.$invalid && editForm.location.$dirty">
                 <p class="help-block"
-                   ng-show="editForm.email.$error.required">
+                   ng-show="editForm.location.$error.required">
                     This field is required.
+                </p>
+
+                <p class="help-block"
+                   ng-show="editForm.location.$error.minlength">
+                    Your e-mail is required to be at least 5 characters.
+                </p>
+
+                <p class="help-block"
+                   ng-show="editForm.location.$error.maxlength">
+                    Your e-mail cannot be longer than 100 characters.
+                </p>
+
+                <p class="help-block"
+                   ng-show="editForm.location.$error.pattern">
+                    E-mail not allowed.
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="field_file">Your CV</label>
+            <input type="file" file-model="myFile" name="cv" id="field_file"
+                   ng-model="jobApplication.cv" check-file-size="1000000" required>
+
+            <div ng-show="editForm.cv.$invalid">
+                <p class="help-block"
+                   ng-show="editForm.cv.$error.required">
+                    You cannot upload file size greater to 1 MB
                 </p>
             </div>
         </div>
