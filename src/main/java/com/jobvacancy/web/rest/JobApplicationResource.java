@@ -10,13 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URISyntaxException;
 
 @RestController
@@ -36,16 +36,14 @@ public class JobApplicationResource {
      */
     @RequestMapping(value = "/Application",
         method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE, consumes = { "multipart/form-data" })
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JobOffer> createJobApplication(
-        @RequestPart(value = "jobApplication") JobApplicationDTO jobApplication,
-        @RequestPart(value = "file") MultipartFile multipartFile) throws URISyntaxException {
-        log.debug("REST request to save JobApplication : {} {}", jobApplication, multipartFile);
-        jobApplication.setFile(multipartFile);
+    public ResponseEntity<JobOffer> createJobApplication(@Valid @RequestBody JobApplicationDTO jobApplication)
+        throws URISyntaxException {
+        log.debug("REST request to save JobApplication : {}", jobApplication);
         jobApplication.validate();
         JobOffer jobOffer = jobOfferRepository.findOne(jobApplication.getOfferId());
-        this.mailService.sendApplication(jobApplication.getEmail(), jobOffer, multipartFile);
+        this.mailService.sendApplication(jobApplication.getEmail(), jobOffer);
 
         return ResponseEntity.accepted()
             .headers(HeaderUtil.createAlert("Application created and sent offer's owner", "")).body(null);
