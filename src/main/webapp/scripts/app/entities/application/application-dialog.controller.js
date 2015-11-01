@@ -14,20 +14,26 @@ angular.module('jobvacancyApp').directive('fileModel', ['$parse', function ($par
             });
         }
     };
-}]).directive('validFile', function () {
+}]).directive('checkFileSize', function () {
     return {
-        require: 'ngModel',
-        link: function (scope, el, attrs, ngModel) {
-            ngModel.$render = function () {
-                ngModel.$setViewValue(el.val());
-            };
-            el.bind('change', function () {
-                scope.$apply(function () {
-                    ngModel.$render();
-                });
+        restrict: 'A',
+        link: function (scope, elem, attr, ctrl) {
+            $(elem).bind('change', function () {
+                if (this.files[0].size > attr.checkFileSize) {
+                    scope.editForm.cv.$invalid = true;
+                    /*scope.editForm.cv.$dirty = false;
+                     scope.editForm.$invalid = true;
+                     scope.editForm.$dirty = true;*/
+                } else {
+                    scope.editForm.cv.$invalid = false;
+                    /* scope.editForm.cv.$dirty = false;
+                     scope.editForm.$invalid = false;
+                     scope.editForm.$dirty = false;*/
+                }
+                scope.$apply();
             });
         }
-    };
+    }
 }).service('fileUpload', ['$http', function ($http) {
     this.uploadFileToUrl = function (jobApplication, file) {
         $http({
