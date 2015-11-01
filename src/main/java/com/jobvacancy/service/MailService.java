@@ -11,16 +11,12 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
-import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -58,15 +54,13 @@ public class MailService {
     }
 
     @Async
-    public void sendApplication(String applicantEmail, JobOffer offer, MultipartFile file) {
-        boolean isMultiPart = file != null;
+    public void sendApplication(String applicantEmail, JobOffer offer) {
         this.sendEmail(offer.getOwner().getEmail(), "[JobVacancy] New candidate",
-            "Hi," + applicantEmail + "applied for your offer:" + offer.getTitle(), isMultiPart, false, file);
+            "Hi," + applicantEmail + "applied for your offer:" + offer.getTitle(), false, false);
     }
 
     @Async
-    public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml,
-        MultipartFile file) {
+    public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}", isMultipart,
             isHtml, to, subject, content);
 
@@ -78,23 +72,11 @@ public class MailService {
             message.setFrom(from);
             message.setSubject(subject);
             message.setText(content, isHtml);
-            addAttachment(isMultipart, file, message);
             javaMailSender.send(mimeMessage);
             log.debug("Sent e-mail to User '{}'", to);
         } catch (Exception e) {
             log.warn("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
         }
-    }
-
-    private void addAttachment(boolean isMultipart, MultipartFile file, MimeMessageHelper message)
-        throws MessagingException, IOException {
-        if (file != null && isMultipart) {
-            message.addAttachment(file.getName(), multipartToByteArray(file));
-        }
-    }
-
-    private ByteArrayDataSource multipartToByteArray(MultipartFile multipart) throws IOException {
-        return new ByteArrayDataSource(multipart.getBytes(), multipart.getContentType());
     }
 
     @Async
@@ -106,7 +88,7 @@ public class MailService {
         context.setVariable("baseUrl", baseUrl);
         String content = templateEngine.process("activationEmail", context);
         String subject = messageSource.getMessage("email.activation.title", null, locale);
-        sendEmail(user.getEmail(), subject, content, false, true, null);
+        sendEmail(user.getEmail(), subject, content, false, true);
     }
 
     @Async
@@ -118,6 +100,6 @@ public class MailService {
         context.setVariable("baseUrl", baseUrl);
         String content = templateEngine.process("passwordResetEmail", context);
         String subject = messageSource.getMessage("email.reset.title", null, locale);
-        sendEmail(user.getEmail(), subject, content, false, true, null);
+        sendEmail(user.getEmail(), subject, content, false, true);
     }
 }
