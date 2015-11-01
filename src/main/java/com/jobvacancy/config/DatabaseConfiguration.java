@@ -14,7 +14,6 @@ import org.springframework.context.ApplicationContextException;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -52,16 +51,17 @@ public class DatabaseConfiguration implements EnvironmentAware {
     @ConditionalOnExpression("#{!environment.acceptsProfiles('cloud') && !environment.acceptsProfiles('heroku')}")
     public DataSource dataSource() {
         log.debug("Configuring Datasource");
-        if (dataSourcePropertyResolver.getProperty("url") == null && dataSourcePropertyResolver.getProperty("databaseName") == null) {
-            log.error("Your database connection pool configuration is incorrect! The application" +
-                    " cannot start. Please check your Spring profile, current profiles are: {}",
-                    Arrays.toString(env.getActiveProfiles()));
+        if (dataSourcePropertyResolver.getProperty("url") == null
+            && dataSourcePropertyResolver.getProperty("databaseName") == null) {
+            log.error("Your database connection pool configuration is incorrect! The application"
+                    + " cannot start. Please check your Spring profile, current profiles are: {}",
+                Arrays.toString(env.getActiveProfiles()));
 
             throw new ApplicationContextException("Database connection pool is not configured correctly");
         }
         HikariConfig config = new HikariConfig();
         config.setDataSourceClassName(dataSourcePropertyResolver.getProperty("dataSourceClassName"));
-        if(StringUtils.isEmpty(dataSourcePropertyResolver.getProperty("url"))) {
+        if (StringUtils.isEmpty(dataSourcePropertyResolver.getProperty("url"))) {
             config.addDataSourceProperty("databaseName", dataSourcePropertyResolver.getProperty("databaseName"));
             config.addDataSourceProperty("serverName", dataSourcePropertyResolver.getProperty("serverName"));
         } else {
@@ -85,8 +85,10 @@ public class DatabaseConfiguration implements EnvironmentAware {
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
             if ("org.h2.jdbcx.JdbcDataSource".equals(dataSourcePropertyResolver.getProperty("dataSourceClassName"))) {
                 liquibase.setShouldRun(true);
-                log.warn("Using '{}' profile with H2 database in memory is not optimal, you should consider switching to" +
-                    " MySQL or Postgresql to avoid rebuilding your database upon each start.", Constants.SPRING_PROFILE_FAST);
+                log.warn(
+                    "Using '{}' profile with H2 database in memory is not optimal, you should consider switching to"
+                        + " MySQL or Postgresql to avoid rebuilding your database upon each start.",
+                    Constants.SPRING_PROFILE_FAST);
             } else {
                 liquibase.setShouldRun(false);
             }

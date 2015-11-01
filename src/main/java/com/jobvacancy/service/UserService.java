@@ -1,7 +1,6 @@
 package com.jobvacancy.service;
 
 import com.jobvacancy.domain.Authority;
-import com.jobvacancy.domain.PersistentToken;
 import com.jobvacancy.domain.User;
 import com.jobvacancy.repository.AuthorityRepository;
 import com.jobvacancy.repository.PersistentTokenRepository;
