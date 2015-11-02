@@ -1,7 +1,6 @@
 package com.jobvacancy.security;
 
 import com.jobvacancy.domain.PersistentToken;
-import com.jobvacancy.domain.User;
 import com.jobvacancy.repository.PersistentTokenRepository;
 import com.jobvacancy.repository.UserRepository;
 import org.joda.time.LocalDate;
