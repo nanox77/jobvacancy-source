@@ -65,6 +65,11 @@
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
                         </button>
                         <button type="submit"
+                                ui-sref="jobOffer.duplicate({id:jobOffer.id})"
+                                class="btn btn-warning btn-sm">
+                            <span class="glyphicon glyphicon-repeat"></span>&nbsp;<span> Duplicate</span>
+                        </button>                        
+                        <button type="submit"
                                 ng-click="delete(jobOffer.id)"
                                 class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>

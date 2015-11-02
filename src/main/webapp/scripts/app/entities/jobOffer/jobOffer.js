@@ -33,6 +33,9 @@ angular.module('jobvacancyApp')
                     }
                 },
                 resolve: {
+                	duplicate: function (){
+                		return false; 
+                	 },
                     entity: ['$stateParams', 'JobOffer', function($stateParams, JobOffer) {
                         return JobOffer.get({id : $stateParams.id});
                     }]
@@ -50,6 +53,9 @@ angular.module('jobvacancyApp')
                         controller: 'JobOfferDialogController',
                         size: 'lg',
                         resolve: {
+                        	duplicate: function (){
+                        		return false; 
+                        	 },
                             entity: function () {
                                 return {title: null, location: null, description: null, id: null};
                             }
@@ -58,6 +64,33 @@ angular.module('jobvacancyApp')
                         $state.go('jobOffer', null, { reload: true });
                     }, function() {
                         $state.go('jobOffer');
+                    })
+                }]
+            })
+            .state('jobOffer.duplicate', {
+                parent: 'jobOffer',
+                url: '/{id}/duplicate',
+                data: {
+                    authorities: ['ROLE_USER'],
+                },
+                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {                	
+                    $modal.open({
+                        templateUrl: 'scripts/app/entities/jobOffer/jobOffer-dialog.html',
+                        controller: 'JobOfferDialogController',
+                        size: 'lg',
+                        resolve: {                         	 
+                        	 duplicate: function (){
+                        		return true; 
+                        	 },
+                        	 entity: ['JobOffer', function(JobOffer) {                        		                                  
+                                 return JobOffer.get({id : $stateParams.id}); 
+                             }]
+                        	
+                        }
+                    }).result.then(function(result) {
+                        $state.go('jobOffer', null, { reload: true });
+                    }, function() {
+                        $state.go('^');
                     })
                 }]
             })
@@ -73,6 +106,9 @@ angular.module('jobvacancyApp')
                         controller: 'JobOfferDialogController',
                         size: 'lg',
                         resolve: {
+                        	duplicate: function (){
+                        		return false; 
+                        	 },
                             entity: ['JobOffer', function(JobOffer) {
                                 return JobOffer.get({id : $stateParams.id});
                             }]
