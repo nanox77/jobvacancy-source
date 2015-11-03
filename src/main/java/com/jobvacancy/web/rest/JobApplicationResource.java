@@ -43,7 +43,7 @@ public class JobApplicationResource {
         log.debug("REST request to save JobApplication : {}", jobApplication);
         jobApplication.validate();
         JobOffer jobOffer = jobOfferRepository.findOne(jobApplication.getOfferId());
-        this.mailService.sendApplication(jobApplication.getEmail(), jobOffer);
+        this.mailService.sendApplication(jobApplication.getEmail(), jobApplication.getUrl(), jobOffer);
 
         return ResponseEntity.accepted()
             .headers(HeaderUtil.createAlert("Application created and sent offer's owner", "")).body(null);
