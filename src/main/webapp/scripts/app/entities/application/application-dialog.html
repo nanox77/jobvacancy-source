@@ -55,6 +55,36 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label for="field_url_cv">Your CV Link</label>
+            <input type="text" class="form-control" name="url" id="field_url_cv"
+                   ng-model="jobApplication.url"
+                   ng-pattern="/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/"
+                   ng-minlength=5 ng-maxlength=100 required>
+
+            <div ng-show="editForm.url.$invalid && editForm.url.$dirty">
+                <p class="help-block"
+                   ng-show="editForm.url.$error.required">
+                    This field is required.
+                </p>
+
+                <p class="help-block"
+                   ng-show="editForm.url.$error.minlength">
+                    Your url is required to be at least 5 characters.
+                </p>
+
+                <p class="help-block"
+                   ng-show="editForm.url.$error.maxlength">
+                    Your url cannot be longer than 100 characters.
+                </p>
+
+                <p class="help-block"
+                   ng-show="editForm.url.$error.pattern">
+                    Url not allowed.
+                </p>
+            </div>
+        </div>
+
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
