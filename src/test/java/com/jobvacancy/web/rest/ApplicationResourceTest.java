@@ -56,6 +56,9 @@ public class ApplicationResourceTest {
     @Inject
     private UserRepository userRepository;
 
+    @Mock
+    private UserRepository mockUserRepository;
+
     @Inject
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -64,15 +67,19 @@ public class ApplicationResourceTest {
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
         Optional<User> user = userRepository.findOneByLogin("user");
+        when(mockUserRepository.findOneByLogin(Mockito.any())).thenReturn(user);
         offer = new JobOffer();
         offer.setTitle(OFFER_TITLE);
         offer.setId(OFFER_ID);
         offer.setOwner(user.get());
         when(jobOfferRepository.findOne(OFFER_ID)).thenReturn(offer);
+
         JobApplicationResource jobApplicationResource = new JobApplicationResource();
         ReflectionTestUtils.setField(jobApplicationResource, "jobOfferRepository", jobOfferRepository);
         ReflectionTestUtils.setField(jobApplicationResource, "mailService", mailService);
+        ReflectionTestUtils.setField(jobApplicationResource, "userRepository", mockUserRepository);
 
         this.restMockMvc = MockMvcBuilders.standaloneSetup(jobApplicationResource)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -84,12 +91,38 @@ public class ApplicationResourceTest {
         JobApplicationDTO dto = createJobApplicationDTO(OFFER_ID, APPLICANT_FULLNAME, APPLICANT_EMAIL,
             APPLICANT_VALID_URL);
 
-        doNothing().when(mailService).sendApplication(APPLICANT_EMAIL, dto.getUrl(), offer);
+        Optional<User> anonymousUser = userRepository.findOneByLogin("anonymousUser");
+        Optional<User> user = userRepository.findOneByLogin("user");
+
+        when(mockUserRepository.findOneByLogin(Mockito.any())).thenReturn(anonymousUser);
+        JobOffer offer2 = new JobOffer();
+        offer2.setTitle(OFFER_TITLE);
+        offer2.setId(OFFER_ID);
+        offer2.setOwner(user.get());
+        when(jobOfferRepository.findOne(OFFER_ID)).thenReturn(offer2);
+
+        doNothing().when(mailService).sendApplication(APPLICANT_EMAIL, dto.getUrl(), offer2);
 
         restMockMvc.perform(post("/api/Application").contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(dto))).andExpect(status().isAccepted());
 
         Mockito.verify(mailService).sendApplication(APPLICANT_EMAIL, dto.getUrl(), offer);
+    }
+
+    @Test
+    @Transactional
+    public void createJobApplicationThrowErrorWhenIsPublishedByYourself() throws Exception {
+        JobApplicationDTO dto = createJobApplicationDTO(OFFER_ID, APPLICANT_FULLNAME, APPLICANT_EMAIL,
+            APPLICANT_VALID_URL);
+
+        doNothing().when(mailService).sendApplication(APPLICANT_EMAIL, dto.getUrl(), offer);
+
+        try {
+            restMockMvc.perform(post("/api/Application").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(dto)));
+        } catch (Exception e) {
+            Assert.assertTrue(e.getMessage().contains("Cannot apply to offer published by yourself"));
+        }
     }
 
     @Test
