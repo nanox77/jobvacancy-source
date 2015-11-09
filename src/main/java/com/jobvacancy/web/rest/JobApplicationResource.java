@@ -2,10 +2,14 @@ package com.jobvacancy.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.jobvacancy.domain.JobOffer;
+import com.jobvacancy.domain.Postulant;
 import com.jobvacancy.repository.JobOfferRepository;
+import com.jobvacancy.repository.PostulantRepository;
 import com.jobvacancy.service.MailService;
 import com.jobvacancy.web.rest.dto.JobApplicationDTO;
 import com.jobvacancy.web.rest.util.HeaderUtil;
+
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+
 import java.net.URISyntaxException;
 
 @RestController
@@ -27,6 +32,9 @@ public class JobApplicationResource {
 
     @Inject
     private JobOfferRepository jobOfferRepository;
+    
+    @Inject
+    private PostulantRepository postulantRepository;
 
     @Inject
     private MailService mailService;
@@ -41,11 +49,16 @@ public class JobApplicationResource {
     public ResponseEntity<JobOffer> createJobApplication(@Valid @RequestBody JobApplicationDTO jobApplication)
         throws URISyntaxException {
         log.debug("REST request to save JobApplication : {}", jobApplication);
-        jobApplication.validate();
+        jobApplication.validate();        
         JobOffer jobOffer = jobOfferRepository.findOne(jobApplication.getOfferId());
+        Postulant postulant = jobApplication.getPostulant();                        
+        //postulantRepository.save(postulant);
+        jobOffer.addPostulant(postulant);
+        jobOfferRepository.save(jobOffer);
         this.mailService.sendApplication(jobApplication.getEmail(), jobApplication.getUrl(), jobOffer);
 
         return ResponseEntity.accepted()
             .headers(HeaderUtil.createAlert("Application created and sent offer's owner", "")).body(null);
     }
+
 }

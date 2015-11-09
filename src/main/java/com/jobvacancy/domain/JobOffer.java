@@ -3,14 +3,22 @@ package com.jobvacancy.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A JobOffer.
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "JOB_OFFER")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -29,10 +37,14 @@ public class JobOffer implements Serializable {
 
     @Column(name = "description")
     private String description;
-
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Postulant> postulants = new HashSet<Postulant>();   
+    
     @ManyToOne
     private User owner;
-
+    
     public Long getId() {
         return id;
     }
@@ -48,7 +60,16 @@ public class JobOffer implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    
+    public  Collection<Postulant> getPostulant() {
+        return postulants;
+    }
 
+    public void addPostulant(Postulant postulant) {
+        this.postulants.add(postulant);
+    }
+
+    
     public String getLocation() {
         return location;
     }
@@ -103,4 +124,5 @@ public class JobOffer implements Serializable {
                 ", description='" + description + "'" +
                 '}';
     }
+	
 }

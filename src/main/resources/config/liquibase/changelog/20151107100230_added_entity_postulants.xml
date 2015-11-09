@@ -15,26 +15,25 @@
     <property name="floatType" value="float" dbms="mysql, oracle"/>
 
     <!--
-        Added the entity JobOffer.
+        Added the entity Postulant.
     -->
-    <changeSet id="20150927214436" author="jhipster">
-        <createTable tableName="JOB_OFFER">
+    <changeSet id="20151107120230" author="jhipster">
+        <createTable tableName="POSTULANTS">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}" >
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="title" type="varchar(255)">
+            <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="location" type="varchar(255)"/>            
-            <column name="description" type="varchar(255)"/>
-            <column name="owner_id" type="bigint"/>
+            <column name="email" type="varchar(255)"/>            
+            <column name="joboffer_id" type="bigint"/>
         </createTable>
         
-        <addForeignKeyConstraint baseColumnNames="owner_id"
-                                 baseTableName="JOB_OFFER"
-                                 constraintName="fk_joboffer_owner_id"
+        <addForeignKeyConstraint baseColumnNames="joboffer_id"
+                                 baseTableName="POSTULANTS"
+                                 constraintName="fk_postulants_joboffer_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="JHI_USER"/>
+                                 referencedTableName="JOB_OFFER"/>
 
     </changeSet>
 </databaseChangeLog>
