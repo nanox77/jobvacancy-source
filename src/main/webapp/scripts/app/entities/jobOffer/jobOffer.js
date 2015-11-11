@@ -55,8 +55,8 @@ angular.module('jobvacancyApp')
                         resolve: {
                         	duplicate: function (){
                         		return false; 
-                        	 },
-                            entity: function () {
+                        	 },                        	
+                        	entity: function () {
                                 return {title: null, location: null, description: null, id: null};
                             }
                         }

@@ -1,5 +1,6 @@
 package com.jobvacancy.web.rest.dto;
 
+import com.jobvacancy.domain.Postulant;
 import com.jobvacancy.web.rest.errors.InvalidEmailException;
 import com.jobvacancy.web.rest.errors.InvalidUrlException;
 
@@ -76,5 +77,12 @@ public class JobApplicationDTO {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(field).matches();
     }
+
+	public Postulant getPostulant() {
+		Postulant postulant = new Postulant();
+		postulant.setName(this.fullname);
+		postulant.setEmail(this.email);		
+		return postulant;
+	}
 
 }

@@ -2,6 +2,7 @@ package com.jobvacancy.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.jobvacancy.domain.JobOffer;
+import com.jobvacancy.domain.Postulant;
 import com.jobvacancy.domain.User;
 import com.jobvacancy.repository.JobOfferRepository;
 import com.jobvacancy.repository.UserRepository;
@@ -52,6 +53,9 @@ public class JobApplicationResource {
         jobApplication.validate();
         JobOffer jobOffer = jobOfferRepository.findOne(jobApplication.getOfferId());
         validateOffer(jobOffer.getOwner().getId());
+        Postulant postulant = jobApplication.getPostulant();
+        jobOffer.addPostulant(postulant);
+        jobOfferRepository.save(jobOffer);
         this.mailService.sendApplication(jobApplication.getEmail(), jobApplication.getUrl(), jobOffer);
         return ResponseEntity.accepted()
             .headers(HeaderUtil.createAlert("Application created and sent offer's owner", "")).body(null);

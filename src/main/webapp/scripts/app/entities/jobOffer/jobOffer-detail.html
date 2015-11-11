@@ -1,6 +1,6 @@
-
 <div>
     <h2><span>JobOffer</span> {{jobOffer.id}}</h2>
+
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -37,6 +37,41 @@
             </tbody>
         </table>
     </div>
+
+    <div>
+        <h2>Postulants</h2>
+        <jh-alert></jh-alert>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="id" name="id"
+                           ng-model="jobOffer.id" readonly>
+                </div>
+
+                <tr ng-repeat="postulant in jobOffer.postulants">
+                    <td>{{postulant.name}}</td>
+                    <td>{{postulant.email}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <nav>
+                <ul class="pager">
+                    <li ng-show="links['first'] >= 0" ng-click="loadPage(links['first'])"><a href="#">&lt;&lt;</a></li>
+                    <li ng-show="page > 0" ng-click="loadPage(links['prev'] || 0)"><a href="#">&lt;</a></li>
+                    <li ng-show="links['next']" ng-click="loadPage(links['next'])"><a href="#">&gt;</a></li>
+                    <li ng-show="links['last'] > 0" ng-click="loadPage(links['last'])"><a href="#">&gt;&gt;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
 
     <button type="submit"
             onclick="window.history.back()"

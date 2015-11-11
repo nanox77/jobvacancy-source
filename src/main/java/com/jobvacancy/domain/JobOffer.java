@@ -6,11 +6,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A JobOffer.
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "JOB_OFFER")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -30,6 +33,10 @@ public class JobOffer implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Postulant> postulants = new HashSet<>();
+
     @ManyToOne
     private User owner;
 
@@ -47,6 +54,14 @@ public class JobOffer implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Set<Postulant> getPostulants() {
+        return postulants;
+    }
+
+    public void addPostulant(Postulant postulant) {
+        getPostulants().add(postulant);
     }
 
     public String getLocation() {
@@ -84,7 +99,8 @@ public class JobOffer implements Serializable {
 
         JobOffer jobOffer = (JobOffer) o;
 
-        if ( ! Objects.equals(id, jobOffer.id)) return false;
+        if (!Objects.equals(id, jobOffer.id))
+            return false;
 
         return true;
     }
@@ -97,10 +113,11 @@ public class JobOffer implements Serializable {
     @Override
     public String toString() {
         return "JobOffer{" +
-                "id=" + id +
-                ", title='" + title + "'" +
-                ", location='" + location + "'" +
-                ", description='" + description + "'" +
-                '}';
+            "id=" + id +
+            ", title='" + title + "'" +
+            ", location='" + location + "'" +
+            ", description='" + description + "'" +
+            '}';
     }
+
 }
