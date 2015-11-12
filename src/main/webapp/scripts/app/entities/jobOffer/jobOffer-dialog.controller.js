@@ -22,7 +22,7 @@ angular.module('jobvacancyApp').controller('JobOfferDialogController',
             $modalInstance.close(result);
         };
 
-        $scope.save = function () {
+        $scope.save = function () {        	
         	if (duplicate){
         		$scope.jobOffer.id = null;
         	}

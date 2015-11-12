@@ -38,6 +38,6 @@ angular.module('jobvacancyApp')
         };
 
         $scope.clear = function () {
-            $scope.jobOffer = {title: null, location: null, description: null, id: null};
+            $scope.jobOffer = {title: null, location: null, description: null, id: null, postulant: null};
         };
     });
