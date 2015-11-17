@@ -57,8 +57,17 @@ public class JobApplicationResource {
         jobOffer.addPostulant(postulant);
         jobOfferRepository.save(jobOffer);
         this.mailService.sendApplication(jobApplication.getEmail(), jobApplication.getUrl(), jobOffer);
+        sendMailForMaxCapacity(jobOffer);
         return ResponseEntity.accepted()
             .headers(HeaderUtil.createAlert("Application created and sent offer's owner", "")).body(null);
+    }
+
+    private void sendMailForMaxCapacity(JobOffer jobOffer) {
+        Integer capacity = jobOffer.getCapacity();
+        int postulantSize = jobOffer.getPostulants().size();
+        if (capacity != null && capacity.equals(postulantSize)) {
+            this.mailService.sendEmailForMaxCapacity(jobOffer);
+        }
     }
 
     private void validateOffer(Long ownerId) {

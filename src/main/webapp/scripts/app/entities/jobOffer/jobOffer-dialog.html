@@ -1,4 +1,3 @@
-
 <form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
 
     <div class="modal-header">
@@ -8,20 +7,19 @@
     </div>
     <div class="modal-body">
         <jh-alert-error></jh-alert-error>
-<!--
-        <div class="form-group">
-            <input type="hidden" class="form-control" id="id" name="id"
-                    ng-model="jobOffer.id" readonly>
-        </div>
--->
+        <!--
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="id" name="id"
+                            ng-model="jobOffer.id" readonly>
+                </div>
+        -->
         <div class="form-group">
             <label for="field_title">Title</label>
             <input type="text" class="form-control" name="title" id="field_title"
-                    ng-model="jobOffer.title"
-                    required>
+                   ng-model="jobOffer.title" required>
+
             <div ng-show="editForm.title.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.title.$error.required">
+                <p class="help-block" ng-show="editForm.title.$error.required">
                     This field is required.
                 </p>
             </div>
@@ -29,14 +27,27 @@
         <div class="form-group">
             <label for="field_location">Location</label>
             <input type="text" class="form-control" name="location" id="field_location"
-                    ng-model="jobOffer.location"
-                    >
+                   ng-model="jobOffer.location">
         </div>
         <div class="form-group">
             <label for="field_description">Description</label>
             <input type="text" class="form-control" name="description" id="field_description"
-                    ng-model="jobOffer.description"
-                    >
+                   ng-model="jobOffer.description">
+        </div>
+        <div class="form-group">
+            <label for="field_capacity">Candidate Limit</label>
+            <input type="number" max="20" min="1" class="form-control" name="capacity" id="field_capacity"
+                   ng-model="jobOffer.capacity">
+
+            <div ng-show="editForm.capacity.$invalid">
+                <p class="help-block" ng-show="editForm.capacity.$error.min">
+                    Must be greater than 1.
+                </p>
+
+                <p class="help-block" ng-show="editForm.capacity.$error.max">
+                    Must be less than 20.
+                </p>
+            </div>
         </div>
 
     </div>

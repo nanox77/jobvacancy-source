@@ -1,6 +1,7 @@
 package com.jobvacancy.service;
 
 import com.jobvacancy.domain.JobOffer;
+import com.jobvacancy.domain.Postulant;
 import com.jobvacancy.domain.User;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
@@ -78,6 +79,58 @@ public class MailService {
         } catch (Exception e) {
             log.warn("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
         }
+    }
+
+    @Async
+    public void sendEmailForMaxCapacity(JobOffer jobOffer) {
+        String to = jobOffer.getOwner().getEmail();
+        String subject = "[JobVacancy] Offer is full!";
+        log.debug("Send e-mail to '{}' with subject '{}' ", to, subject);
+
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        String content = buildContent(jobOffer);
+
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, CharEncoding.UTF_8);
+            message.setTo(to);
+            message.setFrom(from);
+            message.setSubject(subject);
+            message.setText(content, true);
+            javaMailSender.send(mimeMessage);
+            log.debug("Sent e-mail to User '{}'", to);
+        } catch (Exception e) {
+            log.warn("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
+        }
+    }
+
+    private String buildContent(JobOffer jobOffer) {
+        StringBuilder builder = new StringBuilder();
+        String jobOfferTitle = jobOffer.getTitle();
+
+        String title = "<b>Hola, se ha llenado el cupo de postulantes para la oferta " + jobOfferTitle
+            + ". Los postulantes son los siguientes: </b>";
+
+        builder.append(title);
+        builder.append("<table> <tbody>");
+
+        for (Postulant postulant : jobOffer.getPostulants()) {
+            String name = postulant.getName();
+            String email = postulant.getEmail();
+
+            builder.append("<tr>");
+            builder.append("<td>");
+            builder.append(name);
+            builder.append("</td>");
+            builder.append("<td>");
+            builder.append(email);
+            builder.append("</td>");
+            builder.append("</tr>");
+        }
+
+        builder.append("</tbody> </table>");
+
+        return builder.toString();
     }
 
     @Async

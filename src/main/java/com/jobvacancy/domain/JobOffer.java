@@ -40,6 +40,17 @@ public class JobOffer implements Serializable {
     @ManyToOne
     private User owner;
 
+    @Column(name = "capacity")
+    private Integer capacity;
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
+
     public Long getId() {
         return id;
     }

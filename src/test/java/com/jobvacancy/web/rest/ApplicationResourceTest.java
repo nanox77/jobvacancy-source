@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -70,10 +71,7 @@ public class ApplicationResourceTest {
 
         Optional<User> user = userRepository.findOneByLogin("user");
         when(mockUserRepository.findOneByLogin(Mockito.any())).thenReturn(user);
-        offer = new JobOffer();
-        offer.setTitle(OFFER_TITLE);
-        offer.setId(OFFER_ID);
-        offer.setOwner(user.get());
+        offer = createJobOffer(user, 2);
         when(jobOfferRepository.findOne(OFFER_ID)).thenReturn(offer);
 
         JobApplicationResource jobApplicationResource = new JobApplicationResource();
@@ -95,18 +93,35 @@ public class ApplicationResourceTest {
         Optional<User> user = userRepository.findOneByLogin("user");
 
         when(mockUserRepository.findOneByLogin(Mockito.any())).thenReturn(anonymousUser);
-        JobOffer offer2 = new JobOffer();
-        offer2.setTitle(OFFER_TITLE);
-        offer2.setId(OFFER_ID);
-        offer2.setOwner(user.get());
+        JobOffer offer2 = createJobOffer(user, 2);
         when(jobOfferRepository.findOne(OFFER_ID)).thenReturn(offer2);
 
         doNothing().when(mailService).sendApplication(APPLICANT_EMAIL, dto.getUrl(), offer2);
 
-        restMockMvc.perform(post("/api/Application").contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(dto))).andExpect(status().isAccepted());
+        postToAPI(dto);
 
         Mockito.verify(mailService).sendApplication(APPLICANT_EMAIL, dto.getUrl(), offer);
+    }
+
+    @Test
+    @Transactional
+    public void sendEmailForMaxCapacityWhenApplyMaxCapacity() throws Exception {
+        JobApplicationDTO dto = createJobApplicationDTO(OFFER_ID, APPLICANT_FULLNAME, APPLICANT_EMAIL,
+            APPLICANT_VALID_URL);
+
+        Optional<User> anonymousUser = userRepository.findOneByLogin("anonymousUser");
+        Optional<User> user = userRepository.findOneByLogin("user");
+
+        when(mockUserRepository.findOneByLogin(Mockito.any())).thenReturn(anonymousUser);
+        JobOffer offer2 = createJobOffer(user, 2);
+        when(jobOfferRepository.findOne(OFFER_ID)).thenReturn(offer2);
+
+        doNothing().when(mailService).sendApplication(APPLICANT_EMAIL, dto.getUrl(), offer2);
+
+        postToAPI(dto);
+        postToAPI(dto);
+
+        Mockito.verify(mailService).sendEmailForMaxCapacity(offer);
     }
 
     @Test
@@ -141,6 +156,26 @@ public class ApplicationResourceTest {
         }
     }
 
+    @Test
+    @Transactional
+    public void notSendEmailForMaxCapacityWhenThereIsCapacity() throws Exception {
+        JobApplicationDTO dto = createJobApplicationDTO(OFFER_ID, APPLICANT_FULLNAME, APPLICANT_EMAIL,
+            APPLICANT_VALID_URL);
+
+        Optional<User> anonymousUser = userRepository.findOneByLogin("anonymousUser");
+        Optional<User> user = userRepository.findOneByLogin("user");
+
+        when(mockUserRepository.findOneByLogin(Mockito.any())).thenReturn(anonymousUser);
+        JobOffer offer2 = createJobOffer(user, 2);
+        when(jobOfferRepository.findOne(OFFER_ID)).thenReturn(offer2);
+
+        doNothing().when(mailService).sendApplication(APPLICANT_EMAIL, dto.getUrl(), offer2);
+
+        postToAPI(dto);
+
+        Mockito.verify(mailService, VerificationModeFactory.times(0)).sendEmailForMaxCapacity(offer2);
+    }
+
     private JobApplicationDTO createJobApplicationDTO(Long offerId, String fullname, String email, String url) {
         JobApplicationDTO dto = new JobApplicationDTO();
         dto.setEmail(email);
@@ -149,4 +184,19 @@ public class ApplicationResourceTest {
         dto.setUrl(url);
         return dto;
     }
+
+    private void postToAPI(JobApplicationDTO dto) throws Exception {
+        restMockMvc.perform(post("/api/Application").contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(dto))).andExpect(status().isAccepted());
+    }
+
+    private JobOffer createJobOffer(Optional<User> user, int maxCapacity) {
+        JobOffer offer = new JobOffer();
+        offer.setTitle(OFFER_TITLE);
+        offer.setId(OFFER_ID);
+        offer.setOwner(user.get());
+        offer.setCapacity(maxCapacity);
+        return offer;
+    }
+
 }

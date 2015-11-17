@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -55,9 +54,7 @@ public class JobOfferResourceTest {
     private static final String UPDATED_LOCATION = "UPDATED_TEXT";
     private static final String DEFAULT_DESCRIPTION = "SAMPLE_TEXT";
     private static final String UPDATED_DESCRIPTION = "UPDATED_TEXT";
-
-    @Inject
-    private PasswordEncoder passwordEncoder;
+    private static final Integer DEFAULT_CAPACITY = 2;
 
     @Inject
     private UserRepository userRepository;
@@ -77,7 +74,6 @@ public class JobOfferResourceTest {
     private MockMvc restJobOfferMockMvc;
 
     private JobOffer jobOffer;
-    private User user;
 
     @PostConstruct
     public void setup() {
@@ -100,6 +96,7 @@ public class JobOfferResourceTest {
         jobOffer.setTitle(DEFAULT_TITLE);
         jobOffer.setLocation(DEFAULT_LOCATION);
         jobOffer.setDescription(DEFAULT_DESCRIPTION);
+        jobOffer.setCapacity(DEFAULT_CAPACITY);
     }
 
     public static class MockSecurityContext implements SecurityContext {

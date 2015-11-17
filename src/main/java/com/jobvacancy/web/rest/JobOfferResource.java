@@ -1,6 +1,7 @@
 package com.jobvacancy.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.collect.FluentIterable;
 import com.jobvacancy.domain.JobOffer;
 import com.jobvacancy.domain.User;
 import com.jobvacancy.repository.JobOfferRepository;
@@ -46,8 +47,8 @@ public class JobOfferResource {
      * POST  /jobOffers -> Create a new jobOffer.
      */
     @RequestMapping(value = "/jobOffers",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<JobOffer> createJobOffer(@Valid @RequestBody JobOffer jobOffer) throws URISyntaxException {
         log.debug("REST request to save JobOffer : {}", jobOffer);
@@ -59,8 +60,7 @@ public class JobOfferResource {
         jobOffer.setOwner(currentUser.get());
         JobOffer result = jobOfferRepository.save(jobOffer);
         return ResponseEntity.created(new URI("/api/jobOffers/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert("jobOffer", result.getId().toString()))
-                .body(result);
+            .headers(HeaderUtil.createEntityCreationAlert("jobOffer", result.getId().toString())).body(result);
     }
 
     /**
@@ -76,35 +76,23 @@ public class JobOfferResource {
             return createJobOffer(jobOffer);
         }
         JobOffer result = jobOfferRepository.save(jobOffer);
-        return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert("jobOffer", jobOffer.getId().toString()))
-                .body(result);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("jobOffer", jobOffer.getId().toString()))
+            .body(result);
     }
-
-    /**
-     * GET  /jobOffers -> get all the jobOffers.
-     */
-/*
-    @RequestMapping(value = "/jobOffers",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<List<JobOffer>> getAllJobOffers(Pageable pageable)
-        throws URISyntaxException {
-        Page<JobOffer> page = jobOfferRepository.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/jobOffers");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-*/
 
     @RequestMapping(value = "/jobOffers",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<JobOffer>> getAllJobOffers(Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<JobOffer>> getAllJobOffers(Pageable pageable) throws URISyntaxException {
         List<JobOffer> list = jobOfferRepository.findByOwnerIsCurrentUser();
-        Page<JobOffer> page = new Page<JobOffer>() {
+        Page<JobOffer> page = createJobOfferPage(list);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/jobOffers");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    private Page<JobOffer> createJobOfferPage(final List<JobOffer> list) {
+        return new Page<JobOffer>() {
             @Override
             public int getTotalPages() {
                 return 1;
@@ -180,23 +168,27 @@ public class JobOfferResource {
                 return list.iterator();
             }
         };
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/jobOffers");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    private List<JobOffer> filterJobOfferByCapacity(List<JobOffer> jobOffers) {
+        return FluentIterable.from(jobOffers).filter(jobOffer -> {
+            Integer capacity = jobOffer.getCapacity();
+            int postulantSize = jobOffer.getPostulants().size();
+            return capacity == null || postulantSize < capacity;
+        }).toList();
     }
 
     /**
      * GET  /jobOffers/:id -> get the "id" jobOffer.
      */
     @RequestMapping(value = "/jobOffers/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<JobOffer> getJobOffer(@PathVariable Long id) {
         log.debug("REST request to get JobOffer : {}", id);
         return Optional.ofNullable(jobOfferRepository.findOne(id))
-            .map(jobOffer -> new ResponseEntity<>(
-                jobOffer,
-                HttpStatus.OK))
+            .map(jobOffer -> new ResponseEntity<>(jobOffer, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -204,8 +196,8 @@ public class JobOfferResource {
      * DELETE  /jobOffers/:id -> delete the "id" jobOffer.
      */
     @RequestMapping(value = "/jobOffers/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.DELETE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Void> deleteJobOffer(@PathVariable Long id) {
         log.debug("REST request to delete JobOffer : {}", id);
@@ -213,17 +205,16 @@ public class JobOfferResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("jobOffer", id.toString())).build();
     }
 
-
     /**
      * GET  /jobOffers -> get all the jobOffers.
      */
     @RequestMapping(value = "/offers",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<JobOffer>> getAllOffers(Pageable pageable)
-            throws URISyntaxException {
-        Page<JobOffer> page = jobOfferRepository.findAll(pageable);
+    public ResponseEntity<List<JobOffer>> getAllOffers(Pageable pageable) throws URISyntaxException {
+        List<JobOffer> list = filterJobOfferByCapacity(jobOfferRepository.findAll(pageable).getContent());
+        Page<JobOffer> page = createJobOfferPage(list);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/offers");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
