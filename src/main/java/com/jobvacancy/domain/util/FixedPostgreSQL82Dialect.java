@@ -15,7 +15,7 @@ public class FixedPostgreSQL82Dialect extends PostgreSQL82Dialect {
 
     @Override
     public SqlTypeDescriptor remapSqlTypeDescriptor(SqlTypeDescriptor sqlTypeDescriptor) {
-        if (sqlTypeDescriptor.getSqlType() == java.sql.Types.BLOB) {
+        if (sqlTypeDescriptor.getSqlType() == Types.BLOB) {
             return BinaryTypeDescriptor.INSTANCE;
         }
         return super.remapSqlTypeDescriptor(sqlTypeDescriptor);

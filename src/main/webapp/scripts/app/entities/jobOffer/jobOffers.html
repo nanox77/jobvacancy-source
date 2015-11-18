@@ -44,6 +44,7 @@
                     <th>Title</th>
                     <th>Location</th>
                     <th>Description</th>
+                    <th>Postulants</th>
                     <th></th>
                 </tr>
             </thead>
@@ -53,6 +54,7 @@
                     <td>{{jobOffer.title}}</td>
                     <td>{{jobOffer.location}}</td>
                     <td>{{jobOffer.description}}</td>
+                    <td>{{jobOffer.numberOfPostulants}}</td>
                     <td>
                         <button type="submit"
                                 ui-sref="jobOffer.detail({id:jobOffer.id})"

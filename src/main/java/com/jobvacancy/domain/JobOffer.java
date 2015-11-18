@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
@@ -130,5 +131,10 @@ public class JobOffer implements Serializable {
             ", description='" + description + "'" +
             '}';
     }
+
+	public int getNumberOfPostulants() {
+		
+		return this.postulants.size();
+	}
 
 }

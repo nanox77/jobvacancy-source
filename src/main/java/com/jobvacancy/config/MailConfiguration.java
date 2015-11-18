@@ -15,7 +15,7 @@ import java.util.Properties;
 public class MailConfiguration implements EnvironmentAware {
 
     private static final String ENV_SPRING_MAIL = "mail.";
-    private static final String DEFAULT_HOST = "127.0.0.1";
+    private static final String DEFAULT_HOST = "localhost";
     private static final String PROP_HOST = "host";
     private static final String DEFAULT_PROP_HOST = "localhost";
     private static final String PROP_PORT = "port";
