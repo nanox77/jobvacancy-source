@@ -1,7 +1,6 @@
 package com.jobvacancy.service;
 
 import com.jobvacancy.domain.JobOffer;
-import com.jobvacancy.domain.Postulant;
 import com.jobvacancy.domain.User;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
@@ -57,7 +56,7 @@ public class MailService {
     @Async
     public void sendApplication(String applicantEmail, String applicantUrl, JobOffer offer) {
         this.sendEmail(offer.getOwner().getEmail(), "[JobVacancy] New candidate",
-            "Hi," + applicantEmail + "applied for your offer:" + offer.getTitle() + ". CV link: " + applicantUrl, false,
+            "Hi," + applicantEmail + " applied for your offer:" + offer.getTitle() + ". CV link: " + applicantUrl, false,
             false);
     }
 
@@ -108,27 +107,8 @@ public class MailService {
         StringBuilder builder = new StringBuilder();
         String jobOfferTitle = jobOffer.getTitle();
 
-        String title = "<b>Hola, se ha llenado el cupo de postulantes para la oferta " + jobOfferTitle
-            + ". Los postulantes son los siguientes: </b>";
-
+        String title = "Hola, se ha llenado el cupo de postulantes para la oferta " + jobOfferTitle;
         builder.append(title);
-        builder.append("<table> <tbody>");
-
-        for (Postulant postulant : jobOffer.getPostulants()) {
-            String name = postulant.getName();
-            String email = postulant.getEmail();
-
-            builder.append("<tr>");
-            builder.append("<td>");
-            builder.append(name);
-            builder.append("</td>");
-            builder.append("<td>");
-            builder.append(email);
-            builder.append("</td>");
-            builder.append("</tr>");
-        }
-
-        builder.append("</tbody> </table>");
 
         return builder.toString();
     }

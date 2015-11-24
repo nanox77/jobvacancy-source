@@ -9,6 +9,7 @@ import com.jobvacancy.repository.UserRepository;
 import com.jobvacancy.security.SecurityUtils;
 import com.jobvacancy.web.rest.util.HeaderUtil;
 import com.jobvacancy.web.rest.util.PaginationUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -22,9 +23,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +61,7 @@ public class JobOfferResource {
         String currentLogin = SecurityUtils.getCurrentLogin();
         Optional<User> currentUser = userRepository.findOneByLogin(currentLogin);
         jobOffer.setOwner(currentUser.get());
+        jobOffer.setPostulants();
         JobOffer result = jobOfferRepository.save(jobOffer);
         return ResponseEntity.created(new URI("/api/jobOffers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("jobOffer", result.getId().toString())).body(result);
@@ -177,7 +181,18 @@ public class JobOfferResource {
             return capacity == null || postulantSize < capacity;
         }).toList();
     }
-
+    
+    private List<JobOffer> filterJobOffer(List<JobOffer> jobOffers) {
+        List<JobOffer> list = filterJobOfferByCapacity(jobOffers);
+        List<JobOffer> finalList = new LinkedList<JobOffer>();  
+        for (JobOffer jobOffer:list){
+        	if (jobOffer.isActive()){
+        		finalList.add(jobOffer);
+        	}
+        }
+        return  finalList; 
+    }
+    
     /**
      * GET  /jobOffers/:id -> get the "id" jobOffer.
      */
@@ -213,7 +228,7 @@ public class JobOfferResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<List<JobOffer>> getAllOffers(Pageable pageable) throws URISyntaxException {
-        List<JobOffer> list = filterJobOfferByCapacity(jobOfferRepository.findAll(pageable).getContent());
+        List<JobOffer> list = filterJobOffer(jobOfferRepository.findAll(pageable).getContent());
         Page<JobOffer> page = createJobOfferPage(list);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/offers");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);

@@ -43,7 +43,28 @@ public class JobOffer implements Serializable {
 
     @Column(name = "capacity")
     private Integer capacity;
+    
+    @Column(name= "state")
+    private Integer state= 1;
+    
+    public Integer getState() {
+        return state;
+    }
 
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public String getActive(){
+    	String active;
+    	if (this.isActive()){
+    		active = "Active";
+    	}else{
+    		active = "Finalize";
+    	}
+    	return active;
+    }
+    
     public Integer getCapacity() {
         return capacity;
     }
@@ -135,6 +156,14 @@ public class JobOffer implements Serializable {
 	public int getNumberOfPostulants() {
 		
 		return this.postulants.size();
+	}
+
+	public boolean isActive() {		
+		return (this.state ==1);
+	}
+
+	public void setPostulants() {
+		postulants = new HashSet<>();
 	}
 
 }

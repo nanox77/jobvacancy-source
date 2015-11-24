@@ -45,6 +45,7 @@
                     <th>Location</th>
                     <th>Description</th>
                     <th>Postulants</th>
+                    <th>State</th>
                     <th></th>
                 </tr>
             </thead>
@@ -55,6 +56,7 @@
                     <td>{{jobOffer.location}}</td>
                     <td>{{jobOffer.description}}</td>
                     <td>{{jobOffer.numberOfPostulants}}</td>
+                    <td>{{jobOffer.active}}</td>
                     <td>
                         <button type="submit"
                                 ui-sref="jobOffer.detail({id:jobOffer.id})"
@@ -70,6 +72,11 @@
                                 ui-sref="jobOffer.duplicate({id:jobOffer.id})"
                                 class="btn btn-warning btn-sm">
                             <span class="glyphicon glyphicon-repeat"></span>&nbsp;<span> Duplicate</span>
+                        </button>
+                        <button type="submit"
+                                ui-sref="jobOffer.finalize({id:jobOffer.id})"
+                                class="btn btn-success btn-sm">
+                            <span class="glyphicon glyphicon-arrow-down"></span>&nbsp;<span> Finalize</span>
                         </button>                        
                         <button type="submit"
                                 ng-click="delete(jobOffer.id)"
