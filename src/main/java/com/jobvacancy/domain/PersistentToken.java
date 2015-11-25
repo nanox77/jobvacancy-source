@@ -2,6 +2,7 @@ package com.jobvacancy.domain;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -12,6 +13,7 @@ import org.joda.time.format.DateTimeFormatter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import java.io.Serializable;
 
 /**
@@ -19,6 +21,7 @@ import java.io.Serializable;
  *
  * @see com.jobvacancy.security.CustomPersistentRememberMeServices
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "JHI_PERSISTENT_TOKEN")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

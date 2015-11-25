@@ -35,6 +35,10 @@ angular.module('jobvacancyApp')
                     duplicate: function () {
                         return false;
                     },
+                    ptitle: function () {
+                        return "Create a new job offer";
+                    },
+
                     entity: ['$stateParams', 'JobOffer', function ($stateParams, JobOffer) {
                         return JobOffer.get({id: $stateParams.id});
                     }]
@@ -54,6 +58,9 @@ angular.module('jobvacancyApp')
                         resolve: {
                             duplicate: function () {
                                 return false;
+                            },
+                            ptitle: function () {
+                                return "Create a new job offer";
                             },
                             entity: function () {
                                 return {title: null, location: null, description: null, id: null};
@@ -81,6 +88,39 @@ angular.module('jobvacancyApp')
                             duplicate: function () {
                                 return true;
                             },
+                            ptitle: function () {
+                                return "Create from this job offer";
+                            },
+                            entity: ['JobOffer', function (JobOffer) {
+                                return JobOffer.get({id: $stateParams.id});
+                            }]
+
+                        }
+                    }).result.then(function (result) {
+                            $state.go('jobOffer', null, {reload: true});
+                        }, function () {
+                            $state.go('^');
+                        })
+                }]
+            })
+            .state('jobOffer.finalize', {
+                parent: 'jobOffer',
+                url: '/{id}/finalize',
+                data: {
+                    authorities: ['ROLE_USER'],
+                },
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
+                    $modal.open({
+                        templateUrl: 'scripts/app/entities/jobOffer/jobOffer-finalize.html',
+                        controller: 'JobOfferDialogController',
+                        size: 'lg',
+                        resolve: {
+                            duplicate: function () {
+                                return false;
+                            },
+                            ptitle: function () {
+                                return "Finalize this job offer";
+                            },
                             entity: ['JobOffer', function (JobOffer) {
                                 return JobOffer.get({id: $stateParams.id});
                             }]
@@ -107,6 +147,9 @@ angular.module('jobvacancyApp')
                         resolve: {
                             duplicate: function () {
                                 return false;
+                            },
+                            ptitle: function () {
+                                return "Edit this job offer";
                             },
                             entity: ['JobOffer', function (JobOffer) {
                                 return JobOffer.get({id: $stateParams.id});

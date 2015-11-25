@@ -1,14 +1,12 @@
 'use strict';
 
 angular.module('jobvacancyApp').controller('JobOfferDialogController',
-    ['$scope', '$stateParams', '$modalInstance', 'duplicate','entity', 'JobOffer', 'User',
-        function($scope, $stateParams, $modalInstance, duplicate, entity, JobOffer, User) {
+    ['$scope', '$stateParams', '$modalInstance', 'duplicate','ptitle','entity', 'JobOffer', 'User',
+        function($scope, $stateParams, $modalInstance, duplicate, ptitle, entity, JobOffer, User) {
     	
-    	if (duplicate){
-    		$scope.PageTitle = "Create from this job offer"
-    	}else{
-    		$scope.PageTitle = "Create or Edit jobOffer"
-    	}
+    	
+    	$scope.PageTitle = ptitle;
+    	
         $scope.jobOffer = entity;
         $scope.users = User.query();
         $scope.load = function(id) {
@@ -24,7 +22,7 @@ angular.module('jobvacancyApp').controller('JobOfferDialogController',
 
         $scope.save = function () {        	
         	if (duplicate){
-        		$scope.jobOffer.id = null;
+        		$scope.jobOffer.id = null;               		
         	}
             if ($scope.jobOffer.id != null) {
             	JobOffer.update($scope.jobOffer, onSaveFinished);

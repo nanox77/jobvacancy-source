@@ -34,5 +34,29 @@ public class JobOfferTest {
 		Assert.assertEquals(1,jobOffer.getNumberOfPostulants());
 	}
 	
+	@Test 
+	public void isActiveMostReturnTrueTest(){
+		Assert.assertTrue(jobOffer.isActive());
+	}
 	
+	@Test 
+	public void isActiveMostReturnFalseTest(){
+		jobOffer.setState(2);
+		Assert.assertFalse(jobOffer.isActive());
+	}
+	
+	@Test
+	public void getActiveMostReturnActiveWhenStateIsOneTest(){
+		String activeResult = "Active";
+		String state = jobOffer.getActive();
+		Assert.assertTrue(activeResult.equals(state));
+	}
+	
+	@Test
+	public void getActiveMostReturnFinalizeWhenStateIsNotOneTest(){
+		String activeResult = "Finalize";
+		jobOffer.setState(2);
+		String state = jobOffer.getActive();
+		Assert.assertTrue(activeResult.equals(state));
+	}
 }
