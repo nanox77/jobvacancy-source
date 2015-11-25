@@ -1,0 +1,32 @@
+id;title;description;location;owner_id;capacity
+1;Java Developer;Full stack spring + hibernate;Caballito;4;10
+2;Cobol Developer;Algo de cobol esta bien;Caballito;4;10
+3;C# Developer;Framework raros de C#;Palermo;4;10
+4;UX Designer;Pattern Design for UI;San Telmo;4;10
+5;UX Designer 2;Pattern Design for UX;San Telmo;4;10
+6;Java Developer Senior;Redis + Couchbase;Villa Urquiza;4;10
+7;Cobol Junior;No mucho mas que el otro;Caballito;4;10
+8;Java Junior;JSF;Villa bosch;4;10
+9;Cobol Semi senior;Un poco de cobol;Martin coronado;4;10
+10;C# Developer Trainee;C# y ganas de aprender;Palermo;4;10
+11;UX Designer Senior;Pattern Design for UX & UI;San Telmo;4;10
+12;UX Designer 3;Pattern Design for UX;San Telmo;4;10
+13;Java Trainee;POO;Villa Urquiza;4;10
+14;Python Junior;Fuerte POO;Caballito;4;10
+15;Scala Developer;Ganas de aprender;Pablo podesta;4;10
+16;Smalltalk;POO & Messages;San Martin;4;10
+17;Assembler;Experiencias comprobables previas;Villa la angostura;4;10
+18;R;Medio raro esto;Villa Urquiza;4;10
+19;PHP Junior;I want you;Caballito;4;10
+20;Web designer Junior;AngularJS + HTML5;Villa Ballester;4;10
+21;C# Developer Trainee;C# y ganas de aprender;Palermo;4;10
+22;UX Designer Senior;Pattern Design for UX & UI;San Telmo;4;10
+23;UX Designer 3;Pattern Design for UX;San Telmo;4;10
+24;Java Trainee;POO;Villa Urquiza;4;10
+25;Python Junior;Fuerte POO;Caballito;4;10
+26;Scala Developer;Ganas de aprender;Pablo podesta;4;10
+27;Smalltalk;POO & Messages;San Martin;4;10
+28;Assembler;Experiencias comprobables previas;Villa la angostura;4;10
+29;R;Medio raro esto;Villa Urquiza;4;10
+30;PHP Junior;I want you;Caballito;4;10
+31;Web designer Junior;AngularJS + HTML5;Villa Ballester;4;10

@@ -18,5 +18,10 @@
         <addColumn tableName="JOB_OFFER">
             <column name="capacity" type="integer"/>
         </addColumn>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/job_offers.csv"
+                  separator=";"
+                  tableName="JOB_OFFER"/>
     </changeSet>
 </databaseChangeLog>

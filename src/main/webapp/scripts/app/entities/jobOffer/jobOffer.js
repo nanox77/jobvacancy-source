@@ -16,8 +16,7 @@ angular.module('jobvacancyApp')
                         controller: 'JobOfferController'
                     }
                 },
-                resolve: {
-                }
+                resolve: {}
             })
             .state('jobOffer.detail', {
                 parent: 'entity',
@@ -33,11 +32,11 @@ angular.module('jobvacancyApp')
                     }
                 },
                 resolve: {
-                	duplicate: function (){
-                		return false; 
-                	 },
-                    entity: ['$stateParams', 'JobOffer', function($stateParams, JobOffer) {
-                        return JobOffer.get({id : $stateParams.id});
+                    duplicate: function () {
+                        return false;
+                    },
+                    entity: ['$stateParams', 'JobOffer', function ($stateParams, JobOffer) {
+                        return JobOffer.get({id: $stateParams.id});
                     }]
                 }
             })
@@ -47,24 +46,24 @@ angular.module('jobvacancyApp')
                 data: {
                     authorities: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
                     $modal.open({
                         templateUrl: 'scripts/app/entities/jobOffer/jobOffer-dialog.html',
                         controller: 'JobOfferDialogController',
                         size: 'lg',
                         resolve: {
-                        	duplicate: function (){
-                        		return false; 
-                        	 },                        	
-                        	entity: function () {
+                            duplicate: function () {
+                                return false;
+                            },
+                            entity: function () {
                                 return {title: null, location: null, description: null, id: null};
                             }
                         }
-                    }).result.then(function(result) {
-                        $state.go('jobOffer', null, { reload: true });
-                    }, function() {
-                        $state.go('jobOffer');
-                    })
+                    }).result.then(function (result) {
+                            $state.go('jobOffer', null, {reload: true});
+                        }, function () {
+                            $state.go('jobOffer');
+                        })
                 }]
             })
             .state('jobOffer.duplicate', {
@@ -73,25 +72,25 @@ angular.module('jobvacancyApp')
                 data: {
                     authorities: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {                	
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
                     $modal.open({
                         templateUrl: 'scripts/app/entities/jobOffer/jobOffer-dialog.html',
                         controller: 'JobOfferDialogController',
                         size: 'lg',
-                        resolve: {                         	 
-                        	 duplicate: function (){
-                        		return true; 
-                        	 },
-                        	 entity: ['JobOffer', function(JobOffer) {                        		                                  
-                                 return JobOffer.get({id : $stateParams.id}); 
-                             }]
-                        	
+                        resolve: {
+                            duplicate: function () {
+                                return true;
+                            },
+                            entity: ['JobOffer', function (JobOffer) {
+                                return JobOffer.get({id: $stateParams.id});
+                            }]
+
                         }
-                    }).result.then(function(result) {
-                        $state.go('jobOffer', null, { reload: true });
-                    }, function() {
-                        $state.go('^');
-                    })
+                    }).result.then(function (result) {
+                            $state.go('jobOffer', null, {reload: true});
+                        }, function () {
+                            $state.go('^');
+                        })
                 }]
             })
             .state('jobOffer.edit', {
@@ -100,24 +99,24 @@ angular.module('jobvacancyApp')
                 data: {
                     authorities: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
                     $modal.open({
                         templateUrl: 'scripts/app/entities/jobOffer/jobOffer-dialog.html',
                         controller: 'JobOfferDialogController',
                         size: 'lg',
                         resolve: {
-                        	duplicate: function (){
-                        		return false; 
-                        	 },
-                            entity: ['JobOffer', function(JobOffer) {
-                                return JobOffer.get({id : $stateParams.id});
+                            duplicate: function () {
+                                return false;
+                            },
+                            entity: ['JobOffer', function (JobOffer) {
+                                return JobOffer.get({id: $stateParams.id});
                             }]
                         }
-                    }).result.then(function(result) {
-                        $state.go('jobOffer', null, { reload: true });
-                    }, function() {
-                        $state.go('^');
-                    })
+                    }).result.then(function (result) {
+                            $state.go('jobOffer', null, {reload: true});
+                        }, function () {
+                            $state.go('^');
+                        })
                 }]
             });
     });

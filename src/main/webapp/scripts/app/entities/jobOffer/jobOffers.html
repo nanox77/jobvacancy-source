@@ -39,45 +39,45 @@
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Location</th>
-                    <th>Description</th>
-                    <th>Postulants</th>
-                    <th></th>
-                </tr>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Postulants</th>
+                <th></th>
+            </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="jobOffer in jobOffers">
-                    <td><a ui-sref="jobOffer.detail({id:jobOffer.id})">{{jobOffer.id}}</a></td>
-                    <td>{{jobOffer.title}}</td>
-                    <td>{{jobOffer.location}}</td>
-                    <td>{{jobOffer.description}}</td>
-                    <td>{{jobOffer.numberOfPostulants}}</td>
-                    <td>
-                        <button type="submit"
-                                ui-sref="jobOffer.detail({id:jobOffer.id})"
-                                class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
-                        </button>
-                        <button type="submit"
-                                ui-sref="jobOffer.edit({id:jobOffer.id})"
-                                class="btn btn-primary btn-sm">
-                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
-                        </button>
-                        <button type="submit"
-                                ui-sref="jobOffer.duplicate({id:jobOffer.id})"
-                                class="btn btn-warning btn-sm">
-                            <span class="glyphicon glyphicon-repeat"></span>&nbsp;<span> Duplicate</span>
-                        </button>                        
-                        <button type="submit"
-                                ng-click="delete(jobOffer.id)"
-                                class="btn btn-danger btn-sm">
-                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
-                        </button>                        
-                    </td>
-                </tr>
+            <tr ng-repeat="jobOffer in jobOffers">
+                <td><a ui-sref="jobOffer.detail({id:jobOffer.id})">{{jobOffer.id}}</a></td>
+                <td>{{jobOffer.title}}</td>
+                <td>{{jobOffer.location}}</td>
+                <td>{{jobOffer.description}}</td>
+                <td>{{jobOffer.numberOfPostulants}}</td>
+                <td>
+                    <button type="submit"
+                            ui-sref="jobOffer.detail({id:jobOffer.id})"
+                            class="btn btn-info btn-sm">
+                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
+                    </button>
+                    <button type="submit"
+                            ui-sref="jobOffer.edit({id:jobOffer.id})"
+                            class="btn btn-primary btn-sm">
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
+                    </button>
+                    <button type="submit"
+                            ui-sref="jobOffer.duplicate({id:jobOffer.id})"
+                            class="btn btn-warning btn-sm">
+                        <span class="glyphicon glyphicon-repeat"></span>&nbsp;<span> Duplicate</span>
+                    </button>
+                    <button type="submit"
+                            ng-click="delete(jobOffer.id)"
+                            class="btn btn-danger btn-sm">
+                        <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
+                    </button>
+                </td>
+            </tr>
             </tbody>
         </table>
         <nav>

@@ -15,9 +15,7 @@ angular.module('jobvacancyApp')
                         controller: 'OffersController'
                     }
                 },
-                resolve: {
-
-                }
+                resolve: {}
             })
             .state('application', {
                 parent: 'offers',
@@ -25,7 +23,7 @@ angular.module('jobvacancyApp')
                 data: {
                     authorities: []
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
                     $modal.open({
                         templateUrl: 'scripts/app/entities/application/application-dialog.html',
                         controller: 'ApplicationDialogController',
@@ -35,11 +33,11 @@ angular.module('jobvacancyApp')
                                 return {fullname: null, email: null, offerId: $stateParams.id};
                             }
                         }
-                    }).result.then(function(result) {
-                        $state.go('offers', null, { reload: true });
-                    }, function() {
-                        $state.go('offers');
-                    })
+                    }).result.then(function (result) {
+                            $state.go('offers', null, {reload: true});
+                        }, function () {
+                            $state.go('offers');
+                        })
                 }]
             });
 
